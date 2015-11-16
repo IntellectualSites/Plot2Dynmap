@@ -1,0 +1,21 @@
+update:
+  period: 300
+layer:
+  name: PlotSquared
+  hidebydefault: false
+  layerprio: 0
+  minzoom: 0
+infowindow: "<div class=\"infowindow\"><span style=\"font-size:120%;\">%id%</span><br>%alias%%owner%%trusted%%members%%flags%</div>"
+infoelement: "%key% <span style=\"font-weight:bold;\">%values%</span><br>"
+plotstyle:
+  strokeColor: '#6666CC'
+  strokeOpacity: 0.8
+  strokeWeight: 3
+  fillColor: '#FFFFFF'
+  fillOpacity: 0.01
+custstyle:
+  customregion1:
+    strokeColor: '#00FF00'
+ownerstyle:
+  kingoftheworld:
+    strokecolor: '#C0C0C0'
