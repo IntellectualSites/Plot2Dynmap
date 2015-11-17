@@ -5,13 +5,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -110,11 +109,11 @@ public class Main extends JavaPlugin implements Listener {
     private String formatInfoWindow(final PlotWrapper plot) {
         String v = "<div class=\"plotinfo\">" + this.infowindow + "</div>";
         v = v.replace("%id%", plot.id.x + "," + plot.id.y);
-        v = v.replace("%alias%", this.infoelement.replace("%values%", plot.alias).replace("%key%", "Alias"));
+        v = v.replace("%alias%", this.infoelement.replace("%values%", StringEscapeUtils.escapeHtml(plot.alias)).replace("%key%", "Alias"));
         v = v.replace("%owner%", this.infoelement.replace("%values%", plot.owner).replace("%key%", "Owner"));
         v = v.replace("%members%", this.infoelement.replace("%values%", plot.helpers).replace("%key%", "Members"));
         v = v.replace("%trusted%", this.infoelement.replace("%values%", plot.trusted).replace("%key%", "Trusted"));
-        v = v.replace("%flags%", this.infoelement.replace("%values%", plot.flags).replace("%key%", "Flags"));
+        v = v.replace("%flags%", this.infoelement.replace("%values%", StringEscapeUtils.escapeHtml(plot.flags)).replace("%key%", "Flags"));
         v = v.replace("%owner%", plot.owner);
         return v;
     }
@@ -174,7 +173,7 @@ public class Main extends JavaPlugin implements Listener {
         double[] z = null;
         
         final String id = name;
-        
+        int i = 0;
         for (RegionWrapper region : MainUtil.getRegions(MainUtil.getPlot(world.getName(), plot.id))) {
 
             x = new double[4];
@@ -188,7 +187,7 @@ public class Main extends JavaPlugin implements Listener {
             x[3] = region.maxX;
             z[3] = region.minZ;
             
-            final String markerid = world.getName() + "_" + id;
+            final String markerid = world.getName() + "_" + id + (i == 0 ? "" : "-" + i);
             AreaMarker m = this.resareas.remove(markerid); /* Existing area? */
             if (m == null) {
                 m = set.createAreaMarker(markerid, name, false, world.getName(), x, z, false);
@@ -207,6 +206,7 @@ public class Main extends JavaPlugin implements Listener {
             m.setDescription(desc); /* Set popup */
             
             newmap.put(markerid, m);
+            i++;
         }
     }
     
