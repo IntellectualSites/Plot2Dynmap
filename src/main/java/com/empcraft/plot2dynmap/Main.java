@@ -146,11 +146,14 @@ public class Main extends JavaPlugin implements Listener {
             z = new double[4];
             x[0] = region.minX;
             z[0] = region.minZ;
+
             x[1] = region.minX;
-            z[1] = region.maxZ;
-            x[2] = region.maxX;
-            z[2] = region.maxZ;
-            x[3] = region.maxX;
+            z[1] = region.maxZ + 1;
+
+            x[2] = region.maxX + 1;
+            z[2] = region.maxZ + 1;
+
+            x[3] = region.maxX + 1;
             z[3] = region.minZ;
 
             final String markerid = world.getName() + "_" + name + (i == 0 ? "" : "-" + i);
