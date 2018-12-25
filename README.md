@@ -1,4 +1,4 @@
 Plot2Dynmap
 ===========
 
-Plot^2 dynmap addon.
+Dynmap addon for PlotSquared 4.
