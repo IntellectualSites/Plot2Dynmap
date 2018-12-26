@@ -230,7 +230,7 @@ public class Main extends JavaPlugin implements Listener {
                         }
                         final String[] trusted_list = new String[plot.getTrusted().size()];
                         i = 0;
-                        for (UUID trusted : plot.getTrusted()) {
+                        for (final UUID trusted : plot.getTrusted()) {
                             trusted_list[i] = MainUtil.getName(trusted);
                             i++;
                         }
@@ -239,15 +239,26 @@ public class Main extends JavaPlugin implements Listener {
                             trusted = StringUtils.join(trusted_list, ",");
                         }
 
-                        String alias = plot.toString();
-                        String flags = "";
-                        final Collection<Flag<?>> plotFlags =
+                        final String alias = plot.toString();
+                        /*final Collection<Flag<?>> plotFlags =
                             FlagManager.getPlotFlags(plot).keySet();
                         if (plotFlags.size() > 0) {
                             flags = StringUtils.join(plotFlags, ",");
+                        }*/
+                        final StringBuilder flagBuilder = new StringBuilder();
+                        final Iterator<Map.Entry<Flag<?>, Object>> iterator =
+                            FlagManager.getPlotFlags(plot).entrySet().iterator();
+                        while (iterator.hasNext()) {
+                            final Map.Entry<Flag<?>, Object> entry = iterator.next();
+                            flagBuilder.append(String.format("%s = %s", entry.getKey().getName(),
+                                entry.getValue().toString()));
+                            if (iterator.hasNext()) {
+                                flagBuilder.append(", ");
+                            }
                         }
+
                         final PlotWrapper plotWrapper =
-                            new PlotWrapper(owner, helpers, trusted, plot.getId(), alias, flags,
+                            new PlotWrapper(owner, helpers, trusted, plot.getId(), alias, flagBuilder.toString(),
                                 plot.getArea());
                         handlePlot(w, plotWrapper, newMap);
                     }
