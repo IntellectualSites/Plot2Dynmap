@@ -10,8 +10,8 @@
 
     <repositories>
         <repository>
-            <id>Incendo</id>
-            <url>https://incendo.org/mvn/repository/maven-releases/</url>
+            <id>incendo-repo</id>
+            <url>https://incendo.org/mvn/</url>
         </repository>
         <repository>
             <id>Incendo-sk89q-mirror</id>
@@ -26,9 +26,9 @@
     <dependencies>
         <dependency>
             <groupId>com.github.intellectualsites.plotsquared</groupId>
-            <artifactId>Plotsquared</artifactId>
-            <classifier>bukkit</classifier>
-            <version>latest</version>
+            <artifactId>PlotSquared</artifactId>
+            <classifier>Bukkit</classifier>
+            <version>4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
