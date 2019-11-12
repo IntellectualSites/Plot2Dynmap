@@ -19,8 +19,9 @@ dependencies {
     compile 'com.github.intellectualsites.plotsquared:PlotSquared-API:latest'
     compile 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
     compile(group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.0.1')
-    compile 'us.dynmap:dynmap:3.0-SNAPSHOT'
-    compile(group: 'org.projectlombok', name: 'lombok', version: '1.18.4')
+    compile('us.dynmap:dynmap:3.0-SNAPSHOT'){ transitive = false }
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
 }
 
 processResources {
