@@ -5,10 +5,10 @@ import com.github.intellectualsites.plotsquared.plot.flag.Flag;
 import com.github.intellectualsites.plotsquared.plot.flag.FlagManager;
 import com.github.intellectualsites.plotsquared.plot.object.Plot;
 import com.github.intellectualsites.plotsquared.plot.object.PlotPlayer;
-import com.github.intellectualsites.plotsquared.plot.object.RegionWrapper;
 import com.github.intellectualsites.plotsquared.plot.util.MainUtil;
 import com.github.intellectualsites.plotsquared.plot.util.UUIDHandler;
 import com.github.intellectualsites.plotsquared.plot.util.expiry.ExpireManager;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.World;
@@ -113,6 +113,7 @@ public class Main extends JavaPlugin implements Listener {
         int sc = 0xFF0000;
         int fc = 0xFF0000;
         try {
+            System.out.println(as.strokeColor);
             sc = Integer.parseInt(as.strokeColor.substring(1), 16);
             fc = Integer.parseInt(as.fillColor.substring(1), 16);
         } catch (final NumberFormatException nfx) {
@@ -140,21 +141,21 @@ public class Main extends JavaPlugin implements Listener {
 
         final Plot plotObject = plot.getArea().getPlot(plot.getPlotId());
 
-        for (RegionWrapper region : plotObject.getRegions()) {
+        for (CuboidRegion region : plotObject.getRegions()) {
 
             x = new double[4];
             z = new double[4];
-            x[0] = region.minX;
-            z[0] = region.minZ;
+            x[0] = region.getMinimumPoint().getX();
+            z[0] = region.getMinimumPoint().getZ();
 
-            x[1] = region.minX;
-            z[1] = region.maxZ + 1;
+            x[1] = region.getMinimumPoint().getX();
+            z[1] = region.getMaximumPoint().getZ() + 1;
 
-            x[2] = region.maxX + 1;
-            z[2] = region.maxZ + 1;
+            x[2] = region.getMaximumPoint().getX() + 1;
+            z[2] = region.getMaximumPoint().getZ() + 1;
 
-            x[3] = region.maxX + 1;
-            z[3] = region.minZ;
+            x[3] = region.getMaximumPoint().getX() + 1;
+            z[3] = region.getMinimumPoint().getZ();
 
             final String markerid = world.getName() + "_" + name + (i == 0 ? "" : "-" + i);
             AreaMarker m = this.resAreas.remove(markerid); /* Existing area? */
@@ -332,7 +333,7 @@ public class Main extends JavaPlugin implements Listener {
             return;
         }
 
-        final int minZoom = config.getInt("layer.minzoom", 0);
+        final int minZoom = config.getInt("layer.getMinimumPoint().getZ()oom", 0);
         if (minZoom > 0) {
             set.setMinZoom(minZoom);
         }
@@ -381,12 +382,12 @@ public class Main extends JavaPlugin implements Listener {
 
     private static final class AreaStyle {
 
-        String strokeColor;
-        double strokeOpacity;
-        int strokeWeight;
-        String fillColor;
-        double fillOpacity;
-        String label;
+        public String strokeColor;
+        public double strokeOpacity;
+        public int strokeWeight;
+        public String fillColor;
+        public double fillOpacity;
+        public String label;
 
         AreaStyle(final FileConfiguration cfg, final String path, final AreaStyle def) {
             this.strokeColor = cfg.getString(path + ".strokeColor", def.strokeColor);
