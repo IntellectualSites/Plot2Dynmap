@@ -6,11 +6,10 @@ targetCompatibility = 1.8
 
 repositories {
     jcenter()
+    mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url "https://ci.athion.net/job/PlotSquared-Breaking/ws/mvn/" }
-    maven { url "https://repo.codemc.org/repository/maven-public/" }
     maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
-    maven { url "http://repo.dmulloy2.net/nexus/repository/public/" }
     maven { url "https://jitpack.io" }
     maven { url "http://maven.sk89q.com/repo/" }
     maven { url "http://repo.mikeprimm.com/" }
@@ -19,9 +18,9 @@ repositories {
 dependencies {
     compile 'com.github.intellectualsites.plotsquared:PlotSquared-API:latest'
     compile 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
-    compile 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
     compile(group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.0.1')
-    compile 'us.dynmap:dynmap:2.6-beta-1'
+    compile 'us.dynmap:dynmap:3.0-SNAPSHOT'
+    compile(group: 'org.projectlombok', name: 'lombok', version: '1.18.4')
 }
 
 processResources {
