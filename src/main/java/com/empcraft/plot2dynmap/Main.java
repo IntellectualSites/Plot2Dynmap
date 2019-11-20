@@ -113,7 +113,6 @@ public class Main extends JavaPlugin implements Listener {
         int sc = 0xFF0000;
         int fc = 0xFF0000;
         try {
-            System.out.println(as.strokeColor);
             sc = Integer.parseInt(as.strokeColor.substring(1), 16);
             fc = Integer.parseInt(as.fillColor.substring(1), 16);
         } catch (final NumberFormatException nfx) {
