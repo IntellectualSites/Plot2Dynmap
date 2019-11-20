@@ -27,6 +27,7 @@ dependencies {
 processResources {
     from('src/main/resources') {
         include 'plugin.yml'
+        include 'config.yml'
     }
 }
 
