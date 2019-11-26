@@ -1,6 +1,6 @@
 name: Plot2Dynmap
 main: com.empcraft.plot2dynmap.Main
-version: 3.2.1
+version: 4.1
 api-version: "1.14"
 depend: [PlotSquared,dynmap]
 description: "This plugin adds a marker around claimed PlotSquared plots in the dynmap interface"
