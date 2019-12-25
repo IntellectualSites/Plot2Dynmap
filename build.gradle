@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     compile 'com.github.intellectualsites.plotsquared:PlotSquared-API:latest'
-    compile 'org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT'
+    compile 'org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT'
     compile(group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.0.1')
     compile('us.dynmap:dynmap:3.0-SNAPSHOT'){ transitive = false }
     compileOnly 'org.projectlombok:lombok:1.18.10'
