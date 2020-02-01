@@ -8,6 +8,7 @@ import com.github.intellectualsites.plotsquared.plot.object.PlotPlayer;
 import com.github.intellectualsites.plotsquared.plot.util.MainUtil;
 import com.github.intellectualsites.plotsquared.plot.util.UUIDHandler;
 import com.github.intellectualsites.plotsquared.plot.util.expiry.ExpireManager;
+import com.empcraft.plot2dynmap.Metrics;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -56,6 +57,7 @@ public class Main extends JavaPlugin implements Listener {
     private Map<String, AreaStyle> ownerStyle;
     private boolean stop;
     private Map<String, AreaMarker> resAreas = new HashMap<>();
+    private static final int BSTATS_ID = 6400;
 
     private void severe(final String msg) {
         getLogger().severe("[Plot^2] " + msg);
@@ -305,6 +307,8 @@ public class Main extends JavaPlugin implements Listener {
         if (this.dynmap.isEnabled() && this.plot2.isEnabled()) {
             initialize();
         }
+        // Enable metrics
+        new Metrics(this, BSTATS_ID);
     }
 
     private void initialize() {
