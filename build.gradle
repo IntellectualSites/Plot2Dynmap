@@ -11,14 +11,14 @@ repositories {
     maven { url "https://ci.athion.net/job/PlotSquared-Breaking/ws/mvn/" }
     maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
     maven { url "https://jitpack.io" }
-    maven { url "http://maven.sk89q.com/repo/" }
     maven { url "http://repo.mikeprimm.com/" }
+    maven { url "https://maven.enginehub.org/repo/" }
 }
 
 dependencies {
     compile 'com.github.intellectualsites.plotsquared:PlotSquared-API:latest'
-    compile 'org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT'
-    compile(group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.0.1')
+    compile 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
+    compile(group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.1.0-SNAPSHOT')
     compile('us.dynmap:dynmap:3.0-SNAPSHOT'){ transitive = false }
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
