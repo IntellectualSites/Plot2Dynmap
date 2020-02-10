@@ -20,7 +20,7 @@ dependencies {
     compile 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
     compile(group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.1.1-SNAPSHOT')
     compile('us.dynmap:dynmap:3.0-SNAPSHOT'){ transitive = false }
-    compileOnly 'org.projectlombok:lombok:1.18.10'
+    compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 }
 
