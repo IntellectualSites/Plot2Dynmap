@@ -1,7 +1,7 @@
 package com.empcraft.plot2dynmap;
 
-import com.github.intellectualsites.plotsquared.plot.object.PlotArea;
-import com.github.intellectualsites.plotsquared.plot.object.PlotId;
+import com.plotsquared.core.plot.PlotArea;
+import com.plotsquared.core.plot.PlotId;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

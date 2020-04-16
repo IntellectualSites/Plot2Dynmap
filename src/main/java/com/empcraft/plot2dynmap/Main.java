@@ -1,14 +1,12 @@
 package com.empcraft.plot2dynmap;
 
-import com.github.intellectualsites.plotsquared.plot.PlotSquared;
-import com.github.intellectualsites.plotsquared.plot.flag.Flag;
-import com.github.intellectualsites.plotsquared.plot.flag.FlagManager;
-import com.github.intellectualsites.plotsquared.plot.object.Plot;
-import com.github.intellectualsites.plotsquared.plot.object.PlotPlayer;
-import com.github.intellectualsites.plotsquared.plot.util.MainUtil;
-import com.github.intellectualsites.plotsquared.plot.util.UUIDHandler;
-import com.github.intellectualsites.plotsquared.plot.util.expiry.ExpireManager;
-import com.empcraft.plot2dynmap.Metrics;
+import com.plotsquared.core.PlotSquared;
+import com.plotsquared.core.player.PlotPlayer;
+import com.plotsquared.core.plot.Plot;
+import com.plotsquared.core.plot.expiration.ExpireManager;
+import com.plotsquared.core.plot.flag.PlotFlag;
+import com.plotsquared.core.util.MainUtil;
+import com.plotsquared.core.util.uuid.UUIDHandler;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -27,7 +25,13 @@ import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 
 /**
@@ -248,11 +252,11 @@ public class Main extends JavaPlugin implements Listener {
                             flags = StringUtils.join(plotFlags, ",");
                         }*/
                         final StringBuilder flagBuilder = new StringBuilder();
-                        final Iterator<Map.Entry<Flag<?>, Object>> iterator =
-                            FlagManager.getPlotFlags(plot).entrySet().iterator();
+                        final Iterator<PlotFlag<?,?>> iterator =
+                            plot.getFlags().iterator();
                         while (iterator.hasNext()) {
-                            final Map.Entry<Flag<?>, Object> entry = iterator.next();
-                            flagBuilder.append(String.format("%s = %s", entry.getKey().getName(),
+                            final PlotFlag<?,?> entry = iterator.next();
+                            flagBuilder.append(String.format("%s = %s", entry.getName(),
                                 entry.getValue().toString()));
                             if (iterator.hasNext()) {
                                 flagBuilder.append(", ");

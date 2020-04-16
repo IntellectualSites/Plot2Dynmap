@@ -13,10 +13,11 @@ repositories {
     maven { url "https://jitpack.io" }
     maven { url "http://repo.mikeprimm.com/" }
     maven { url "https://maven.enginehub.org/repo/" }
+    maven { url "https://plotsquared.com/mvn/" }
 }
 
 dependencies {
-    compile 'com.github.intellectualsites.plotsquared:PlotSquared-API:latest'
+    compile 'com.plotsquared:PlotSquared:5.1'
     compile 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
     compile(group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.2.0-SNAPSHOT')
     compile('us.dynmap:dynmap:3.0-SNAPSHOT'){ transitive = false }
