@@ -299,7 +299,7 @@ public class Main extends JavaPlugin implements Listener {
             return;
         }
 
-        final int minZoom = config.getInt("layer.getMinimumPoint().getZ()oom", 0);
+        final int minZoom = config.getInt("layer.minimumpoint.zoom", 0);
         if (minZoom > 0) {
             set.setMinZoom(minZoom);
         }
