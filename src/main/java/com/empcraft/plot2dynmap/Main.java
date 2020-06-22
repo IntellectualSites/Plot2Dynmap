@@ -343,7 +343,7 @@ public class Main extends JavaPlugin implements Listener {
         }
         this.updatePeriod = per * 20;
         this.stop = false;
-        getServer().getScheduler().scheduleSyncDelayedTask(this, new Plot2Update(), 420);
+        getServer().getScheduler().runTaskLaterAsynchronously(this, new Plot2Update(), 420L);
     }
 
     private static final class AreaStyle {
