@@ -59,7 +59,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
 
     private String formatInfoWindow(final PlotWrapper plot) {
         String v = "<div class=\"plotinfo\">" + this.infoWindow + "</div>";
-        v = v.replace("%id%", plot.getPlotId().x + "," + plot.getPlotId().y);
+        v = v.replace("%id%", plot.getPlotId().toCommaSeparatedString());
         v = v.replace("%alias%",
             this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getAlias()))
                 .replace("%key%", "Alias"));
@@ -127,7 +127,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
 
     private void handlePlot(final World world, final PlotWrapper plot,
         final Map<String, AreaMarker> newMap) {
-        final String name = plot.getPlotId().x + "," + plot.getPlotId().y;
+        final String name = plot.getPlotId().toCommaSeparatedString();
 
         double[] x;
         double[] z;
