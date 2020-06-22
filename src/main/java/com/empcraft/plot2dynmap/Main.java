@@ -25,7 +25,6 @@ import org.dynmap.markers.MarkerSet;
 
 import java.util.*;
 
-
 /**
  * A lot of this code is reused from the examples provided by 'mikeprimm' - creator of dynmap
  *
@@ -182,35 +181,7 @@ public class Main extends JavaPlugin implements Listener {
         try {
             for (final World w : getServer().getWorlds()) {
                 if (PlotSquared.get().hasPlotArea(w.getName())) {
-                    List<Plot> plots = new ArrayList<>(PlotSquared.get().getPlots(w.getName()));
-                    if (plots.size() > 4096) {
-                        plots.sort((a, b) -> {
-                            if (Objects.equals(a.getOwnerAbs(), b.getOwnerAbs())) {
-                                long l1 = ExpireManager.IMP.getAge(a.getOwnerAbs());
-                                long l2 = ExpireManager.IMP.getAge(b.getOwnerAbs());
-                                if (l1 == l2) {
-                                    return Math.abs(a.hashCode()) - Math.abs(b.hashCode());
-                                }
-                                if (l2 == 0L) {
-                                    return -1;
-                                }
-                                if (l1 == 0L) {
-                                    return 1;
-                                }
-                                if (l1 > l2) {
-                                    return -1;
-                                }
-                                return 1;
-                            }
-                            if (b.getOwnerAbs() == null) {
-                                return -1;
-                            } else {
-                                return 1;
-                            }
-                        });
-                        plots = plots.subList(0, 4096);
-                    }
-                    for (final Plot plot : plots) {
+                    for (final Plot plot : new ArrayList<>(PlotSquared.get().getPlots(w.getName()))) {
                         String owner = MainUtil.getName(plot.getOwnerAbs());
                         final String[] helpers_list = new String[plot.getMembers().size()];
                         int i = 0;
@@ -401,7 +372,6 @@ public class Main extends JavaPlugin implements Listener {
             this.fillOpacity = cfg.getDouble(path + ".fillOpacity", 0.01);
         }
     }
-
 
     private class Plot2Update implements Runnable {
         @Override public void run() {
