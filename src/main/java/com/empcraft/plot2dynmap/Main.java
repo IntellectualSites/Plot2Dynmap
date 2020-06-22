@@ -1,12 +1,10 @@
 package com.empcraft.plot2dynmap;
 
 import com.plotsquared.core.PlotSquared;
-import com.plotsquared.core.player.PlotPlayer;
 import com.plotsquared.core.plot.Plot;
 import com.plotsquared.core.plot.expiration.ExpireManager;
 import com.plotsquared.core.plot.flag.PlotFlag;
 import com.plotsquared.core.util.MainUtil;
-import com.plotsquared.core.util.uuid.UUIDHandler;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -25,13 +23,7 @@ import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -193,11 +185,9 @@ public class Main extends JavaPlugin implements Listener {
                     List<Plot> plots = new ArrayList<>(PlotSquared.get().getPlots(w.getName()));
                     if (plots.size() > 4096) {
                         plots.sort((a, b) -> {
-                            PlotPlayer p1 = UUIDHandler.getPlayer(a.guessOwner());
-                            PlotPlayer p2 = UUIDHandler.getPlayer(b.guessOwner());
-                            if (p1 == p2) {
-                                long l1 = ExpireManager.IMP.getAge(a.guessOwner());
-                                long l2 = ExpireManager.IMP.getAge(b.guessOwner());
+                            if (Objects.equals(a.getOwnerAbs(), b.getOwnerAbs())) {
+                                long l1 = ExpireManager.IMP.getAge(a.getOwnerAbs());
+                                long l2 = ExpireManager.IMP.getAge(b.getOwnerAbs());
                                 if (l1 == l2) {
                                     return Math.abs(a.hashCode()) - Math.abs(b.hashCode());
                                 }
@@ -212,18 +202,16 @@ public class Main extends JavaPlugin implements Listener {
                                 }
                                 return 1;
                             }
-                            if (p2 == null) {
+                            if (b.getOwnerAbs() == null) {
                                 return -1;
+                            } else {
+                                return 1;
                             }
-                            return 1;
                         });
                         plots = plots.subList(0, 4096);
                     }
                     for (final Plot plot : plots) {
-                        String owner = MainUtil.getName(plot.guessOwner());
-                        if (owner == null) {
-                            owner = "unknown";
-                        }
+                        String owner = MainUtil.getName(plot.getOwnerAbs());
                         final String[] helpers_list = new String[plot.getMembers().size()];
                         int i = 0;
                         for (UUID member : plot.getMembers()) {
