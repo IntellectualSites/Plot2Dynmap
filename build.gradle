@@ -17,7 +17,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.plotsquared:PlotSquared:5.1'
+    compileOnly(group: 'com.github.intellectualsites.PlotSquared', name: 'PlotSquared-Core', version: 'b9b0d89b5f759354a684cd7a6539ae7e4b883ba2') {
+        exclude(module: 'worldedit-core')
+    }
     compile 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
     compile(group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.2.0-SNAPSHOT')
     compile('us.dynmap:dynmap:3.0-SNAPSHOT'){ transitive = false }
