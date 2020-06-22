@@ -2,7 +2,6 @@ package com.empcraft.plot2dynmap;
 
 import com.plotsquared.core.PlotSquared;
 import com.plotsquared.core.plot.Plot;
-import com.plotsquared.core.plot.expiration.ExpireManager;
 import com.plotsquared.core.plot.flag.PlotFlag;
 import com.plotsquared.core.util.MainUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -31,7 +30,7 @@ import java.util.*;
  * @author Original: Empire92. Updated by Sauilitired
  */
 @SuppressWarnings("unused")
-public class Main extends JavaPlugin implements Listener {
+public class Main extends JavaPlugin implements Listener, Runnable {
 
     private static final String DEF_INFO_ELEMENT =
         "%key% <span style=\"font-weight:bold;\">%values%</span><br>";
@@ -176,7 +175,12 @@ public class Main extends JavaPlugin implements Listener {
         }
     }
 
-    private void updatePlots() {
+    @Override
+    public void run() {
+        if (stop) {
+            return;
+        }
+
         final Map<String, AreaMarker> newMap = new HashMap<>(); /* Build new map */
         try {
             for (final World w : getServer().getWorlds()) {
@@ -242,7 +246,7 @@ public class Main extends JavaPlugin implements Listener {
         this.resAreas = newMap;
 
         getServer().getScheduler()
-            .runTaskLaterAsynchronously(this, new Plot2Update(), this.updatePeriod);
+            .runTaskLaterAsynchronously(this, this, updatePeriod);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -275,7 +279,6 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     private void initialize() {
-
         MarkerAPI markerApi = this.dynAPI.getMarkerAPI();
         if (markerApi == null) {
             severe("Error loading dynmap-API");
@@ -343,7 +346,7 @@ public class Main extends JavaPlugin implements Listener {
         }
         this.updatePeriod = per * 20;
         this.stop = false;
-        getServer().getScheduler().runTaskLaterAsynchronously(this, new Plot2Update(), 420L);
+        getServer().getScheduler().runTaskLaterAsynchronously(this, this, 420L);
     }
 
     private static final class AreaStyle {
@@ -370,14 +373,6 @@ public class Main extends JavaPlugin implements Listener {
             this.strokeWeight = cfg.getInt(path + ".strokeWeight", 8);
             this.fillColor = cfg.getString(path + ".fillColor", "#FFFFFF");
             this.fillOpacity = cfg.getDouble(path + ".fillOpacity", 0.01);
-        }
-    }
-
-    private class Plot2Update implements Runnable {
-        @Override public void run() {
-            if (!Main.this.stop) {
-                updatePlots();
-            }
         }
     }
 }
