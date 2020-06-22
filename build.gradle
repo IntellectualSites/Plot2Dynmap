@@ -8,16 +8,14 @@ repositories {
     jcenter()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url "https://ci.athion.net/job/PlotSquared-Breaking/ws/mvn/" }
     maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
-    maven { url "https://jitpack.io" }
     maven { url "http://repo.mikeprimm.com/" }
     maven { url "https://maven.enginehub.org/repo/" }
-    maven { url "https://plotsquared.com/mvn/" }
+    maven { url "https://mvn.intellectualsites.com/content/repositories/releases/" }
 }
 
 dependencies {
-    compileOnly(group: 'com.github.intellectualsites.PlotSquared', name: 'PlotSquared-Core', version: 'b9b0d89b5f759354a684cd7a6539ae7e4b883ba2') {
+    compileOnly(group: 'com.plotsquared', name: 'PlotSquared-Core', version: '5.12.0') {
         exclude(module: 'worldedit-core')
     }
     compile 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
