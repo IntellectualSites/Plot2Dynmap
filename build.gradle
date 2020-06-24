@@ -33,5 +33,6 @@ processResources {
         expand(
                 version: project.version
         )
+        include 'config.yml'
     }
 }
