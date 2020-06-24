@@ -25,14 +25,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 }
 
+version = "5.1"
+
 processResources {
     from('src/main/resources') {
         include 'plugin.yml'
-        include 'config.yml'
+        expand(
+                version: project.version
+        )
     }
 }
-
-clean.doFirst {
-    delete "../target"
-}
-project.buildDir = './target'
