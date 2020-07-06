@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly(group: 'com.plotsquared', name: 'PlotSquared-Core', version: '5.12.0') {
+    compileOnly(group: 'com.plotsquared', name: 'PlotSquared-Core', version: '5.12.2') {
         exclude(module: 'worldedit-core')
     }
     compile 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
