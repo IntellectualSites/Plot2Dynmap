@@ -54,7 +54,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
     private static final int BSTATS_ID = 6400;
 
     private void severe(final String msg) {
-        getLogger().severe("[Plot^2] " + msg);
+        getLogger().severe("[PlotSquared] " + msg);
     }
 
     private String formatInfoWindow(final PlotWrapper plot) {
