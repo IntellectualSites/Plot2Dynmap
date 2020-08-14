@@ -261,6 +261,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
     }
 
     @Override public void onEnable() {
+        final FileConfiguration config = getConfig();
         final PluginManager pm = getServer().getPluginManager();
         this.dynmap = pm.getPlugin("dynmap");
         if (this.dynmap == null) {
@@ -274,8 +275,13 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         if (this.dynmap.isEnabled() && this.plot2.isEnabled()) {
             initialize();
         }
-        // Enable metrics
-        new Metrics(this, BSTATS_ID);
+        // Manage metrics
+        if (config.getBoolean("metrics.bstats", true)) {
+            new Metrics(this, BSTATS_ID);
+        } else {
+            getLogger().warning("bStats is disabled. Please enable it in /plugins/Plot2Dynmap/config.yml. It helps the developers to identify the features most used and organize future updates better. Cheers.");
+        };
+
     }
 
     private void initialize() {

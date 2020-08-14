@@ -19,3 +19,5 @@ custstyle:
 ownerstyle:
   kingoftheworld:
     strokecolor: '#C0C0C0'
+metrics:
+  bstats: true
