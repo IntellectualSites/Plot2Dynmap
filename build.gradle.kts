@@ -41,6 +41,6 @@ bukkit {
     apiVersion = "1.13"
     description = "his plugin adds a marker around claimed PlotSquared plots in the dynmap interface"
     version = rootProject.version.toString()
-    depend = listOf("PlotSquared", "Dynmap")
+    depend = listOf("PlotSquared", "dynmap")
     website = "https://www.spigotmc.org/resources/1292/"
 }
