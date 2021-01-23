@@ -28,7 +28,7 @@ dependencies {
         exclude(group = "worldedit-core")
     }
     compileOnlyApi("org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.0")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.2")
     compileOnly("us.dynmap:dynmap-api:3.0-SNAPSHOT"){ isTransitive = false }
     compileOnly("org.projectlombok:lombok:1.18.16")
     annotationProcessor("org.projectlombok:lombok:1.18.16")
