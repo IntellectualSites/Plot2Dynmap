@@ -7,6 +7,7 @@ import com.plotsquared.core.util.MainUtil;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,7 +23,12 @@ import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * A lot of this code is reused from the examples provided by 'mikeprimm' - creator of dynmap
@@ -51,7 +57,6 @@ public class Main extends JavaPlugin implements Listener, Runnable {
     private Map<String, AreaStyle> ownerStyle;
     private boolean stop;
     private Map<String, AreaMarker> resAreas = new HashMap<>();
-    private static final int BSTATS_ID = 6400;
 
     private void severe(final String msg) {
         getLogger().severe("[PlotSquared] " + msg);
@@ -275,12 +280,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         if (this.dynmap.isEnabled() && this.plot2.isEnabled()) {
             initialize();
         }
-        // Manage metrics
-        if (config.getBoolean("metrics.bstats", true)) {
-            new Metrics(this, BSTATS_ID);
-        } else {
-            getLogger().warning("bStats is disabled. Please enable it in /plugins/Plot2Dynmap/config.yml. It helps the developers to identify the features most used and organize future updates better. Cheers.");
-        };
+        Metrics metrics = new Metrics(this, 6400);
 
     }
 
