@@ -16,7 +16,6 @@ configure<JavaPluginConvention> {
 version = "5.2"
 
 repositories {
-    jcenter()
     mavenCentral()
     maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
@@ -32,8 +31,8 @@ dependencies {
     compileOnlyApi("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.2")
     compileOnly("us.dynmap:dynmap-api:3.0-SNAPSHOT"){ isTransitive = false }
-    compileOnly("org.projectlombok:lombok:1.18.18")
-    annotationProcessor("org.projectlombok:lombok:1.18.16")
+    compileOnly("org.projectlombok:lombok:1.18.20")
+    annotationProcessor("org.projectlombok:lombok:1.18.20")
     implementation("org.bstats:bstats-bukkit:2.2.1")
     implementation("org.bstats:bstats-base:2.2.1")
 }
