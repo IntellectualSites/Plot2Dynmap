@@ -5,7 +5,7 @@ layer:
   hidebydefault: false
   layerprio: 0
   minzoom: 0
-infowindow: "<div class=\"infowindow\"><span style=\"font-size:120%;\">%id%</span><br>%alias%%owner%%trusted%%members%%flags%</div>"
+infowindow: "<div class=\"infowindow\"><span style=\"font-size:120%;\">%id%</span><br>%alias%%owner%%trusted%%members%%denied%%flags%</div>"
 infoelement: "%key% <span style=\"font-weight:bold;\">%values%</span><br>"
 plotstyle:
   strokeColor: '#6666CC'

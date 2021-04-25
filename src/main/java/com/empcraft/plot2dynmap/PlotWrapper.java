@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
     private final String owner;
     private final String helpers;
     private final String trusted;
+    private final String denied;
     private final PlotId plotId;
     private final String alias;
     private final String flags;

@@ -42,7 +42,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         "%key% <span style=\"font-weight:bold;\">%values%</span><br>";
     private static final String DEF_INFO_WINDOW =
         "<div class=\"infowindow\">" + "<span style=\"font-size:120%;\">%id%</span><br>" + "%alias%"
-            + "%owner%" + "%members%" + "%trusted%" + "%flags%" + "</div>";
+            + "%owner%" +  "%members%" + "%trusted%" + "%denied%" + "%flags%" + "</div>";
 
     private static MarkerSet set;
     private DynmapAPI dynAPI;
@@ -74,6 +74,8 @@ public class Main extends JavaPlugin implements Listener, Runnable {
             this.infoElement.replace("%values%", plot.getHelpers()).replace("%key%", "Members"));
         v = v.replace("%trusted%",
             this.infoElement.replace("%values%", plot.getTrusted()).replace("%key%", "Trusted"));
+        v = v.replace("%denied%",
+                this.infoElement.replace("%values%", plot.getDenied()).replace("%key%", "Denied"));
         v = v.replace("%flags%",
             this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags()))
                 .replace("%key%", "Flags"));
@@ -212,7 +214,11 @@ public class Main extends JavaPlugin implements Listener, Runnable {
                         if (trusted_list.length > 0) {
                             trusted = StringUtils.join(trusted_list, ",");
                         }
-
+                        String denied = "";
+                        final String[] denied_list = new String[plot.getDenied().size()];
+                        if (denied_list.length > 0) {
+                            denied = StringUtils.join(denied_list, ",");
+                        }
                         final String alias = plot.toString();
                         /*final Collection<Flag<?>> plotFlags =
                             FlagManager.getPlotFlags(plot).keySet();
@@ -232,7 +238,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
                         }
 
                         final PlotWrapper plotWrapper =
-                            new PlotWrapper(owner, helpers, trusted, plot.getId(), alias, flagBuilder.toString(),
+                            new PlotWrapper(owner, helpers, trusted, denied, plot.getId(), alias, flagBuilder.toString(),
                                 plot.getArea());
                         handlePlot(w, plotWrapper, newMap);
                     }
