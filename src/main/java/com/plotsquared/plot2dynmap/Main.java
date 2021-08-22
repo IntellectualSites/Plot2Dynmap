@@ -9,15 +9,10 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
@@ -43,9 +38,6 @@ import java.util.UUID;
             + "%members%" + "%trusted%" + "%denied%" + "%flags%" + "</div>";
 
     private static MarkerSet set;
-    private DynmapAPI dynAPI;
-    private Plugin dynmap;
-    private Plugin plot2;
     private long updatePeriod;
     private String infoWindow;
     private String infoElement;
@@ -67,11 +59,11 @@ import java.util.UUID;
         v = v.replace("%alias%",
             this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getAlias())).replace("%key%", "Alias"));
         v = v.replace("%owner%", this.infoElement.replace("%values%", plot.getOwner()).replace("%key%", "Owner"));
-        v = v.replace("%members%", this.infoElement.replace("%values%", plot.getHelpers()).replace("%key%", "Members"));
         v = v.replace("%trusted%", this.infoElement.replace("%values%", plot.getTrusted()).replace("%key%", "Trusted"));
+        v = v.replace("%members%", this.infoElement.replace("%values%", plot.getHelpers()).replace("%key%", "Members"));
         v = v.replace("%denied%", this.infoElement.replace("%values%", plot.getDenied()).replace("%key%", "Denied"));
         v = v.replace("%flags%",
-            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags())).replace("%key%", "Flags"));
+            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags())).replace("%key%", "Flags:"));
         v = v.replace("%owner%", plot.getOwner());
         return v;
     }
@@ -215,7 +207,11 @@ import java.util.UUID;
                         if (denied_list.length > 0) {
                             denied = StringUtils.join(denied_list, ",");
                         }
-                        final String alias = plot.toString();
+                        helpers = helpers.isEmpty() ? helpers : "None";
+                        trusted = trusted.isEmpty() ? trusted : "None";
+                        denied = denied.isEmpty() ? denied : "None";
+
+                        final String alias = plot.getAlias().isEmpty() ? "None" : plot.getAlias();
                         /*final Collection<Flag<?>> plotFlags =
                             FlagManager.getPlotFlags(plot).keySet();
                         if (plotFlags.size() > 0) {
@@ -231,9 +227,11 @@ import java.util.UUID;
                             }
                         }
 
+                        String flags = flagBuilder.toString();
+                        flags = flags.isEmpty() ? "None" : flags;
+
                         final PlotWrapper plotWrapper =
-                            new PlotWrapper(owner, helpers, trusted, denied, plot.getId(), alias, flagBuilder.toString(),
-                                plot.getArea());
+                            new PlotWrapper(owner, helpers, trusted, denied, plot.getId(), alias, flags, plot.getArea());
                         handlePlot(w, plotWrapper, newMap);
                     }
                 }
@@ -253,50 +251,20 @@ import java.util.UUID;
         getServer().getScheduler().runTaskLaterAsynchronously(this, this, updatePeriod);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR) public void onPluginEnable(final PluginEnableEvent event) {
-        final Plugin p = event.getPlugin();
-        final String name = p.getDescription().getName();
-        if (name.equals("dynmap")) {
-            if (this.dynmap.isEnabled() && this.plot2.isEnabled()) {
-                initialize();
-            }
-        }
-    }
-
     @Override public void onEnable() {
         final FileConfiguration config = getConfig();
         final PluginManager pm = getServer().getPluginManager();
-        this.dynmap = pm.getPlugin("dynmap");
-        if (this.dynmap == null) {
-            severe("Dynmap not found, disabling Plot2Dynmap");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-        this.dynAPI = (DynmapAPI) this.dynmap;
-        this.plot2 = pm.getPlugin("PlotSquared");
-        if (this.plot2 == null) {
-            severe("PlotSquared not found, disabling Plot2Dynmap");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+        DynmapAPI dynAPI = (DynmapAPI) pm.getPlugin("dynmap");
         this.plotAreaManager = PlotSquared.get().getPlotAreaManager();
 
         getServer().getPluginManager().registerEvents(this, this);
-
-        if (this.dynmap.isEnabled() && this.plot2.isEnabled()) {
-            initialize();
-        }
         Metrics metrics = new Metrics(this, 6400);
-
-    }
-
-    private void initialize() {
-        MarkerAPI markerApi = this.dynAPI.getMarkerAPI();
+        MarkerAPI markerApi = dynAPI.getMarkerAPI();
         if (markerApi == null) {
             severe("Error loading dynmap-API");
             return;
         }
-        final FileConfiguration config = getConfig();
+
         config.options().copyDefaults(true);
         saveConfig();
 
