@@ -2,8 +2,9 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("java")
-    id("java-library")
+    java
+    `java-library`
+
     id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
@@ -11,8 +12,6 @@ plugins {
 the<JavaPluginExtension>().toolchain {
     languageVersion.set(JavaLanguageVersion.of(16))
 }
-
-version = "6.0.0"
 
 repositories {
     mavenCentral()
