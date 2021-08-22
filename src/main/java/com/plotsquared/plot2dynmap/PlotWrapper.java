@@ -1,4 +1,4 @@
-package com.empcraft.plot2dynmap;
+package com.plotsquared.plot2dynmap;
 
 import com.plotsquared.core.plot.PlotArea;
 import com.plotsquared.core.plot.PlotId;

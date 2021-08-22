@@ -1,13 +1,15 @@
-package com.empcraft.plot2dynmap;
+package com.plotsquared.plot2dynmap;
 
 import com.plotsquared.core.PlotSquared;
 import com.plotsquared.core.plot.Plot;
 import com.plotsquared.core.plot.flag.PlotFlag;
-import com.plotsquared.core.util.MainUtil;
+import com.plotsquared.core.plot.world.PlotAreaManager;
+import com.plotsquared.core.util.query.PlotQuery;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,8 +24,6 @@ import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,14 +35,12 @@ import java.util.UUID;
  *
  * @author Original: Empire92. Updated by Sauilitired
  */
-@SuppressWarnings("unused")
-public class Main extends JavaPlugin implements Listener, Runnable {
+@SuppressWarnings("unused") public class Main extends JavaPlugin implements Listener, Runnable {
 
-    private static final String DEF_INFO_ELEMENT =
-        "%key% <span style=\"font-weight:bold;\">%values%</span><br>";
+    private static final String DEF_INFO_ELEMENT = "%key% <span style=\"font-weight:bold;\">%values%</span><br>";
     private static final String DEF_INFO_WINDOW =
-        "<div class=\"infowindow\">" + "<span style=\"font-size:120%;\">%id%</span><br>" + "%alias%"
-            + "%owner%" +  "%members%" + "%trusted%" + "%denied%" + "%flags%" + "</div>";
+        "<div class=\"infowindow\">" + "<span style=\"font-size:120%;\">%id%</span><br>" + "%alias%" + "%owner%"
+            + "%members%" + "%trusted%" + "%denied%" + "%flags%" + "</div>";
 
     private static MarkerSet set;
     private DynmapAPI dynAPI;
@@ -57,6 +55,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
     private Map<String, AreaStyle> ownerStyle;
     private boolean stop;
     private Map<String, AreaMarker> resAreas = new HashMap<>();
+    private PlotAreaManager plotAreaManager;
 
     private void severe(final String msg) {
         getLogger().severe("[PlotSquared] " + msg);
@@ -66,25 +65,18 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         String v = "<div class=\"plotinfo\">" + this.infoWindow + "</div>";
         v = v.replace("%id%", plot.getPlotId().toCommaSeparatedString());
         v = v.replace("%alias%",
-            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getAlias()))
-                .replace("%key%", "Alias"));
-        v = v.replace("%owner%",
-            this.infoElement.replace("%values%", plot.getOwner()).replace("%key%", "Owner"));
-        v = v.replace("%members%",
-            this.infoElement.replace("%values%", plot.getHelpers()).replace("%key%", "Members"));
-        v = v.replace("%trusted%",
-            this.infoElement.replace("%values%", plot.getTrusted()).replace("%key%", "Trusted"));
-        v = v.replace("%denied%",
-                this.infoElement.replace("%values%", plot.getDenied()).replace("%key%", "Denied"));
+            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getAlias())).replace("%key%", "Alias"));
+        v = v.replace("%owner%", this.infoElement.replace("%values%", plot.getOwner()).replace("%key%", "Owner"));
+        v = v.replace("%members%", this.infoElement.replace("%values%", plot.getHelpers()).replace("%key%", "Members"));
+        v = v.replace("%trusted%", this.infoElement.replace("%values%", plot.getTrusted()).replace("%key%", "Trusted"));
+        v = v.replace("%denied%", this.infoElement.replace("%values%", plot.getDenied()).replace("%key%", "Denied"));
         v = v.replace("%flags%",
-            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags()))
-                .replace("%key%", "Flags"));
+            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags())).replace("%key%", "Flags"));
         v = v.replace("%owner%", plot.getOwner());
         return v;
     }
 
-    private void addStyle(final String plotId, final String worldId, final AreaMarker m,
-        final PlotWrapper plot) {
+    private void addStyle(final String plotId, final String worldId, final AreaMarker m, final PlotWrapper plot) {
         AreaStyle as = this.cusStyle.get(worldId + "/" + plotId);
         if (as == null) {
             as = this.cusStyle.get(plotId);
@@ -94,8 +86,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
                 final String[] tok = wc.split("\\|");
                 if ((tok.length == 1) && plotId.startsWith(tok[0])) {
                     as = this.cusWildStyle.get(wc);
-                } else if ((tok.length >= 2) && plotId.startsWith(tok[0]) && plotId
-                    .endsWith(tok[1])) {
+                } else if ((tok.length >= 2) && plotId.startsWith(tok[0]) && plotId.endsWith(tok[1])) {
                     as = this.cusWildStyle.get(wc);
                 }
             }
@@ -132,8 +123,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         }
     }
 
-    private void handlePlot(final World world, final PlotWrapper plot,
-        final Map<String, AreaMarker> newMap) {
+    private void handlePlot(final World world, final PlotWrapper plot, final Map<String, AreaMarker> newMap) {
         final String name = plot.getPlotId().toCommaSeparatedString();
 
         double[] x;
@@ -142,6 +132,10 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         int i = 0;
 
         final Plot plotObject = plot.getArea().getPlot(plot.getPlotId());
+
+        if (plotObject == null) {
+            return;
+        }
 
         for (CuboidRegion region : plotObject.getRegions()) {
 
@@ -182,8 +176,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         }
     }
 
-    @Override
-    public void run() {
+    @Override public void run() {
         if (stop) {
             return;
         }
@@ -191,13 +184,16 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         final Map<String, AreaMarker> newMap = new HashMap<>(); /* Build new map */
         try {
             for (final World w : getServer().getWorlds()) {
-                if (PlotSquared.get().hasPlotArea(w.getName())) {
-                    for (final Plot plot : new ArrayList<>(PlotSquared.get().getPlots(w.getName()))) {
-                        String owner = MainUtil.getName(plot.getOwnerAbs());
+                if (plotAreaManager.hasPlotArea(w.getName())) {
+                    for (final Plot plot : PlotQuery.newQuery().inWorld(w.getName())) {
+                        if (!plot.hasOwner()) {
+                            continue;
+                        }
+                        String owner = PlotSquared.get().getImpromptuUUIDPipeline().getSingle(plot.getOwnerAbs(), 50);
                         final String[] helpers_list = new String[plot.getMembers().size()];
                         int i = 0;
                         for (UUID member : plot.getMembers()) {
-                            helpers_list[i] = MainUtil.getName(member);
+                            helpers_list[i] = PlotSquared.get().getImpromptuUUIDPipeline().getSingle(member, 20);
                             i++;
                         }
                         String helpers = "";
@@ -207,7 +203,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
                         final String[] trusted_list = new String[plot.getTrusted().size()];
                         i = 0;
                         for (final UUID trusted : plot.getTrusted()) {
-                            trusted_list[i] = MainUtil.getName(trusted);
+                            trusted_list[i] = PlotSquared.get().getImpromptuUUIDPipeline().getSingle(trusted, 20);
                             i++;
                         }
                         String trusted = "";
@@ -226,12 +222,10 @@ public class Main extends JavaPlugin implements Listener, Runnable {
                             flags = StringUtils.join(plotFlags, ",");
                         }*/
                         final StringBuilder flagBuilder = new StringBuilder();
-                        final Iterator<PlotFlag<?,?>> iterator =
-                            plot.getFlags().iterator();
+                        final Iterator<PlotFlag<?, ?>> iterator = plot.getFlags().iterator();
                         while (iterator.hasNext()) {
-                            final PlotFlag<?,?> entry = iterator.next();
-                            flagBuilder.append(String.format("%s = %s", entry.getName(),
-                                entry.getValue().toString()));
+                            final PlotFlag<?, ?> entry = iterator.next();
+                            flagBuilder.append(String.format("%s = %s", entry.getName(), entry.getValue()));
                             if (iterator.hasNext()) {
                                 flagBuilder.append(", ");
                             }
@@ -256,12 +250,10 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         /* And replace with new map */
         this.resAreas = newMap;
 
-        getServer().getScheduler()
-            .runTaskLaterAsynchronously(this, this, updatePeriod);
+        getServer().getScheduler().runTaskLaterAsynchronously(this, this, updatePeriod);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPluginEnable(final PluginEnableEvent event) {
+    @EventHandler(priority = EventPriority.MONITOR) public void onPluginEnable(final PluginEnableEvent event) {
         final Plugin p = event.getPlugin();
         final String name = p.getDescription().getName();
         if (name.equals("dynmap")) {
@@ -277,10 +269,18 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         this.dynmap = pm.getPlugin("dynmap");
         if (this.dynmap == null) {
             severe("Dynmap not found, disabling Plot2Dynmap");
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
         this.dynAPI = (DynmapAPI) this.dynmap;
         this.plot2 = pm.getPlugin("PlotSquared");
+        if (this.plot2 == null) {
+            severe("PlotSquared not found, disabling Plot2Dynmap");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        this.plotAreaManager = PlotSquared.get().getPlotAreaManager();
+
         getServer().getPluginManager().registerEvents(this, this);
 
         if (this.dynmap.isEnabled() && this.plot2.isEnabled()) {
@@ -303,9 +303,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         /* Now, add marker set for mobs (make it transient) */
         set = markerApi.getMarkerSet("plot2.markerset");
         if (set == null) {
-            set = markerApi
-                .createMarkerSet("plot2.markerset", config.getString("layer.name", "PlotSquared"),
-                    null, false);
+            set = markerApi.createMarkerSet("plot2.markerset", config.getString("layer.name", "PlotSquared"), null, false);
         } else {
             set.setMarkerSetLabel(config.getString("layer.name", "PlotSquared"));
         }
@@ -334,8 +332,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
 
             for (final String id : ids) {
                 if (id.indexOf('|') >= 0) {
-                    this.cusWildStyle
-                        .put(id, new AreaStyle(config, "custstyle." + id, this.defStyle));
+                    this.cusWildStyle.put(id, new AreaStyle(config, "custstyle." + id, this.defStyle));
                 } else {
                     this.cusStyle.put(id, new AreaStyle(config, "custstyle." + id, this.defStyle));
                 }
@@ -346,8 +343,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
             final Set<String> ids = sect.getKeys(false);
 
             for (final String id : ids) {
-                this.ownerStyle.put(id.toLowerCase(),
-                    new AreaStyle(config, "ownerstyle." + id, this.defStyle));
+                this.ownerStyle.put(id.toLowerCase(), new AreaStyle(config, "ownerstyle." + id, this.defStyle));
             }
         }
 
@@ -356,7 +352,7 @@ public class Main extends JavaPlugin implements Listener, Runnable {
         if (per < 15) {
             per = 15;
         }
-        this.updatePeriod = per * 20;
+        this.updatePeriod = per * 20L;
         this.stop = false;
         getServer().getScheduler().runTaskLaterAsynchronously(this, this, 420L);
     }
