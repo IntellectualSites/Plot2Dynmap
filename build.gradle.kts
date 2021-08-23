@@ -47,7 +47,7 @@ tasks.named<ShadowJar>("shadowJar") {
 
 bukkit {
     name = "Plot2Dynmap"
-    main = "com.plotsquared.plot2dynmap.Main"
+    main = "com.plotsquared.plot2dynmap.Plot2DynmapPlugin"
     authors = listOf("Empire92", "NotMyFault", "dordsor21")
     apiVersion = "1.13"
     description = "This plugin adds a marker around claimed PlotSquared plots in the dynmap interface"

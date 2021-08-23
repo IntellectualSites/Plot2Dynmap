@@ -30,7 +30,7 @@ import java.util.UUID;
  *
  * @author Original: Empire92. Updated by Sauilitired
  */
-@SuppressWarnings("unused") public class Main extends JavaPlugin implements Listener, Runnable {
+@SuppressWarnings("unused") public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable {
 
     private static final String DEF_INFO_ELEMENT = "%key% <span style=\"font-weight:bold;\">%values%</span><br>";
     private static final String DEF_INFO_WINDOW =
@@ -63,7 +63,7 @@ import java.util.UUID;
         v = v.replace("%members%", this.infoElement.replace("%values%", plot.getHelpers()).replace("%key%", "Members"));
         v = v.replace("%denied%", this.infoElement.replace("%values%", plot.getDenied()).replace("%key%", "Denied"));
         v = v.replace("%flags%",
-            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags())).replace("%key%", "Flags:"));
+            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags())).replace("%key%", "Flags"));
         v = v.replace("%owner%", plot.getOwner());
         return v;
     }
