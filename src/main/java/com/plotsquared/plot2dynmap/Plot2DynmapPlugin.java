@@ -19,6 +19,7 @@ import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,17 +28,16 @@ import java.util.UUID;
 
 /**
  * A lot of this code is reused from the examples provided by 'mikeprimm' - creator of dynmap
- *
- * @author Original: Empire92. Updated by Sauilitired
  */
-@SuppressWarnings("unused") public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable {
+@SuppressWarnings("unused")
+public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable {
 
     private static final String DEF_INFO_ELEMENT = "%key% <span style=\"font-weight:bold;\">%values%</span><br>";
     private static final String DEF_INFO_WINDOW =
-        "<div class=\"infowindow\">" + "<span style=\"font-size:120%;\">%id%</span><br>" + "%alias%" + "%owner%"
-            + "%members%" + "%trusted%" + "%denied%" + "%flags%" + "</div>";
+            "<div class=\"infowindow\">" + "<span style=\"font-size:120%;\">%id%</span><br>" + "%alias%" + "%owner%"
+                    + "%members%" + "%trusted%" + "%denied%" + "%flags%" + "</div>";
 
-    private static MarkerSet set;
+    private static MarkerSet markerSet;
     private long updatePeriod;
     private String infoWindow;
     private String infoElement;
@@ -49,81 +49,81 @@ import java.util.UUID;
     private Map<String, AreaMarker> resAreas = new HashMap<>();
     private PlotAreaManager plotAreaManager;
 
-    private void severe(final String msg) {
-        getLogger().severe("[PlotSquared] " + msg);
-    }
-
     private String formatInfoWindow(final PlotWrapper plot) {
         String v = "<div class=\"plotinfo\">" + this.infoWindow + "</div>";
         v = v.replace("%id%", plot.getPlotId().toCommaSeparatedString());
-        v = v.replace("%alias%",
-            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getAlias())).replace("%key%", "Alias"));
+        v = v.replace(
+                "%alias%",
+                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getAlias())).replace("%key%", "Alias")
+        );
         v = v.replace("%owner%", this.infoElement.replace("%values%", plot.getOwner()).replace("%key%", "Owner"));
         v = v.replace("%trusted%", this.infoElement.replace("%values%", plot.getTrusted()).replace("%key%", "Trusted"));
         v = v.replace("%members%", this.infoElement.replace("%values%", plot.getHelpers()).replace("%key%", "Members"));
         v = v.replace("%denied%", this.infoElement.replace("%values%", plot.getDenied()).replace("%key%", "Denied"));
-        v = v.replace("%flags%",
-            this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags())).replace("%key%", "Flags"));
+        v = v.replace(
+                "%flags%",
+                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags())).replace("%key%", "Flags")
+        );
         v = v.replace("%owner%", plot.getOwner());
         return v;
     }
 
-    private void addStyle(final String plotId, final String worldId, final AreaMarker m, final PlotWrapper plot) {
-        AreaStyle as = this.cusStyle.get(worldId + "/" + plotId);
-        if (as == null) {
-            as = this.cusStyle.get(plotId);
+    private void addStyle(final String plotId, final String worldId, final AreaMarker areaMarker, final PlotWrapper plot) {
+        AreaStyle areaStyle = this.cusStyle.get(worldId + "/" + plotId);
+        if (areaStyle == null) {
+            areaStyle = this.cusStyle.get(plotId);
         }
-        if (as == null) { /* Check for wildcard style matches */
+        if (areaStyle == null) { /* Check for wildcard style matches */
             for (final String wc : this.cusWildStyle.keySet()) {
                 final String[] tok = wc.split("\\|");
                 if ((tok.length == 1) && plotId.startsWith(tok[0])) {
-                    as = this.cusWildStyle.get(wc);
+                    areaStyle = this.cusWildStyle.get(wc);
                 } else if ((tok.length >= 2) && plotId.startsWith(tok[0]) && plotId.endsWith(tok[1])) {
-                    as = this.cusWildStyle.get(wc);
+                    areaStyle = this.cusWildStyle.get(wc);
                 }
             }
         }
-        if (as == null) { /* Check for owner style matches */
+        if (areaStyle == null) { /* Check for owner style matches */
             if (!this.ownerStyle.isEmpty()) {
                 String owner = plot.getOwner();
                 if (owner == null) {
                     owner = "unknown";
                 }
-                as = this.ownerStyle.get(owner.toLowerCase());
+                areaStyle = this.ownerStyle.get(owner.toLowerCase());
             }
         }
-        if (as == null) {
-            as = this.defStyle;
+        if (areaStyle == null) {
+            areaStyle = this.defStyle;
         }
 
-        int sc = 0xFF0000;
-        int fc = 0xFF0000;
+        int strokeColor = 0xFF0000;
+        int fillColor = 0xFF0000;
         try {
-            sc = Integer.parseInt(as.strokeColor.substring(1), 16);
-            fc = Integer.parseInt(as.fillColor.substring(1), 16);
-        } catch (final NumberFormatException nfx) {
-            nfx.printStackTrace();
+            strokeColor = Integer.parseInt(areaStyle.strokeColor.substring(1), 16);
+            fillColor = Integer.parseInt(areaStyle.fillColor.substring(1), 16);
+        } catch (final NumberFormatException e) {
+            e.printStackTrace();
         }
-        if (as.strokeWeight != 0) {
-            m.setLineStyle(as.strokeWeight, as.strokeOpacity, sc);
+        if (areaStyle.strokeWeight != 0) {
+            areaMarker.setLineStyle(areaStyle.strokeWeight, areaStyle.strokeOpacity, strokeColor);
         }
-        if (as.fillOpacity != 0) {
-            m.setFillStyle(as.fillOpacity, fc);
+        if (areaStyle.fillOpacity != 0) {
+            areaMarker.setFillStyle(areaStyle.fillOpacity, fillColor);
         }
-        if (as.label != null) {
-            m.setLabel(as.label);
+        if (areaStyle.label != null) {
+            areaMarker.setLabel(areaStyle.label);
         }
     }
 
-    private void handlePlot(final World world, final PlotWrapper plot, final Map<String, AreaMarker> newMap) {
-        final String name = plot.getPlotId().toCommaSeparatedString();
+    private void handlePlot(final World world, final PlotWrapper plotWrapper, final Map<String, AreaMarker> newMap) {
+        final String name = plotWrapper.getPlotId().toCommaSeparatedString();
 
         double[] x;
         double[] z;
 
         int i = 0;
 
-        final Plot plotObject = plot.getArea().getPlot(plot.getPlotId());
+        final Plot plotObject = plotWrapper.getArea().getPlot(plotWrapper.getPlotId());
 
         if (plotObject == null) {
             return;
@@ -145,39 +145,40 @@ import java.util.UUID;
             x[3] = region.getMaximumPoint().getX() + 1;
             z[3] = region.getMinimumPoint().getZ();
 
-            final String markerid = world.getName() + "_" + name + (i == 0 ? "" : "-" + i);
-            AreaMarker m = this.resAreas.remove(markerid); /* Existing area? */
-            if (m == null) {
-                m = set.createAreaMarker(markerid, name, false, world.getName(), x, z, false);
-                if (m == null) {
+            final String markerId = world.getName() + "_" + name + (i == 0 ? "" : "-" + i);
+            AreaMarker areaMarker = this.resAreas.remove(markerId); /* Existing area? */
+            if (areaMarker == null) {
+                areaMarker = markerSet.createAreaMarker(markerId, name, false, world.getName(), x, z, false);
+                if (areaMarker == null) {
                     return;
                 }
             } else {
-                m.setCornerLocations(x, z); /* Replace corner locations */
-                m.setLabel(name); /* Update label */
+                areaMarker.setCornerLocations(x, z); /* Replace corner locations */
+                areaMarker.setLabel(name); /* Update label */
             }
 
-            addStyle(name, world.getName(), m, plot);
+            addStyle(name, world.getName(), areaMarker, plotWrapper);
 
-            final String desc = formatInfoWindow(plot);
+            final String desc = formatInfoWindow(plotWrapper);
 
-            m.setDescription(desc); /* Set popup */
+            areaMarker.setDescription(desc); /* Set popup */
 
-            newMap.put(markerid, m);
+            newMap.put(markerId, areaMarker);
             i++;
         }
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
         if (stop) {
             return;
         }
 
         final Map<String, AreaMarker> newMap = new HashMap<>(); /* Build new map */
         try {
-            for (final World w : getServer().getWorlds()) {
-                if (plotAreaManager.hasPlotArea(w.getName())) {
-                    for (final Plot plot : PlotQuery.newQuery().inWorld(w.getName())) {
+            for (final World world : getServer().getWorlds()) {
+                if (plotAreaManager.hasPlotArea(world.getName())) {
+                    for (final Plot plot : PlotQuery.newQuery().inWorld(world.getName())) {
                         if (!plot.hasOwner()) {
                             continue;
                         }
@@ -231,8 +232,8 @@ import java.util.UUID;
                         flags = flags.isEmpty() ? "None" : flags;
 
                         final PlotWrapper plotWrapper =
-                            new PlotWrapper(owner, helpers, trusted, denied, plot.getId(), alias, flags, plot.getArea());
-                        handlePlot(w, plotWrapper, newMap);
+                                new PlotWrapper(owner, helpers, trusted, denied, plot.getId(), alias, flags, plot.getArea());
+                        handlePlot(world, plotWrapper, newMap);
                     }
                 }
             }
@@ -241,8 +242,8 @@ import java.util.UUID;
         }
 
         /* Now, review old map - anything left is gone */
-        for (final AreaMarker oldm : this.resAreas.values()) {
-            oldm.deleteMarker();
+        for (final AreaMarker oldMap : this.resAreas.values()) {
+            oldMap.deleteMarker();
         }
 
         /* And replace with new map */
@@ -251,17 +252,18 @@ import java.util.UUID;
         getServer().getScheduler().runTaskLaterAsynchronously(this, this, updatePeriod);
     }
 
-    @Override public void onEnable() {
+    @Override
+    public void onEnable() {
         final FileConfiguration config = getConfig();
-        final PluginManager pm = getServer().getPluginManager();
-        DynmapAPI dynAPI = (DynmapAPI) pm.getPlugin("dynmap");
+        final PluginManager pluginManager = getServer().getPluginManager();
+        DynmapAPI dynAPI = (DynmapAPI) pluginManager.getPlugin("dynmap");
         this.plotAreaManager = PlotSquared.get().getPlotAreaManager();
 
         getServer().getPluginManager().registerEvents(this, this);
         Metrics metrics = new Metrics(this, 6400);
         MarkerAPI markerApi = dynAPI.getMarkerAPI();
         if (markerApi == null) {
-            severe("Error loading dynmap-API");
+            getLogger().severe("Error loading dynmap-API");
             return;
         }
 
@@ -269,23 +271,23 @@ import java.util.UUID;
         saveConfig();
 
         /* Now, add marker set for mobs (make it transient) */
-        set = markerApi.getMarkerSet("plot2.markerset");
-        if (set == null) {
-            set = markerApi.createMarkerSet("plot2.markerset", config.getString("layer.name", "PlotSquared"), null, false);
+        markerSet = markerApi.getMarkerSet("plot2.markerset");
+        if (markerSet == null) {
+            markerSet = markerApi.createMarkerSet("plot2.markerset", config.getString("layer.name", "PlotSquared"), null, false);
         } else {
-            set.setMarkerSetLabel(config.getString("layer.name", "PlotSquared"));
+            markerSet.setMarkerSetLabel(config.getString("layer.name", "PlotSquared"));
         }
-        if (set == null) {
-            severe("Error creating marker set");
+        if (markerSet == null) {
+            getLogger().severe("Error creating marker set");
             return;
         }
 
         final int minZoom = config.getInt("layer.minimumpoint.zoom", 0);
         if (minZoom > 0) {
-            set.setMinZoom(minZoom);
+            markerSet.setMinZoom(minZoom);
         }
-        set.setLayerPriority(config.getInt("layer.layerprio", 10));
-        set.setHideByDefault(config.getBoolean("layer.hidebydefault", false));
+        markerSet.setLayerPriority(config.getInt("layer.layerprio", 10));
+        markerSet.setHideByDefault(config.getBoolean("layer.hidebydefault", false));
         this.infoWindow = config.getString("infowindow", DEF_INFO_WINDOW);
         this.infoElement = config.getString("infoelement", DEF_INFO_ELEMENT);
 
@@ -294,9 +296,9 @@ import java.util.UUID;
         this.cusStyle = new HashMap<>();
         this.ownerStyle = new HashMap<>();
         this.cusWildStyle = new HashMap<>();
-        ConfigurationSection sect = config.getConfigurationSection("custstyle");
-        if (sect != null) {
-            final Set<String> ids = sect.getKeys(false);
+        ConfigurationSection configurationSection = config.getConfigurationSection("custstyle");
+        if (configurationSection != null) {
+            final Set<String> ids = configurationSection.getKeys(false);
 
             for (final String id : ids) {
                 if (id.indexOf('|') >= 0) {
@@ -306,9 +308,9 @@ import java.util.UUID;
                 }
             }
         }
-        sect = config.getConfigurationSection("ownerstyle");
-        if (sect != null) {
-            final Set<String> ids = sect.getKeys(false);
+        configurationSection = config.getConfigurationSection("ownerstyle");
+        if (configurationSection != null) {
+            final Set<String> ids = configurationSection.getKeys(false);
 
             for (final String id : ids) {
                 this.ownerStyle.put(id.toLowerCase(), new AreaStyle(config, "ownerstyle." + id, this.defStyle));
@@ -334,21 +336,23 @@ import java.util.UUID;
         public double fillOpacity;
         public String label;
 
-        AreaStyle(final FileConfiguration cfg, final String path, final AreaStyle def) {
-            this.strokeColor = cfg.getString(path + ".strokeColor", def.strokeColor);
-            this.strokeOpacity = cfg.getDouble(path + ".strokeOpacity", def.strokeOpacity);
-            this.strokeWeight = cfg.getInt(path + ".strokeWeight", def.strokeWeight);
-            this.fillColor = cfg.getString(path + ".fillColor", def.fillColor);
-            this.fillOpacity = cfg.getDouble(path + ".fillOpacity", def.fillOpacity);
-            this.label = cfg.getString(path + ".label", null);
+        AreaStyle(final FileConfiguration config, final String path, final AreaStyle def) {
+            this.strokeColor = config.getString(path + ".strokeColor", def.strokeColor);
+            this.strokeOpacity = config.getDouble(path + ".strokeOpacity", def.strokeOpacity);
+            this.strokeWeight = config.getInt(path + ".strokeWeight", def.strokeWeight);
+            this.fillColor = config.getString(path + ".fillColor", def.fillColor);
+            this.fillOpacity = config.getDouble(path + ".fillOpacity", def.fillOpacity);
+            this.label = config.getString(path + ".label", null);
         }
 
-        AreaStyle(final FileConfiguration cfg, final String path) {
-            this.strokeColor = cfg.getString(path + ".strokeColor", "#6666CC");
-            this.strokeOpacity = cfg.getDouble(path + ".strokeOpacity", 0.8);
-            this.strokeWeight = cfg.getInt(path + ".strokeWeight", 8);
-            this.fillColor = cfg.getString(path + ".fillColor", "#FFFFFF");
-            this.fillOpacity = cfg.getDouble(path + ".fillOpacity", 0.01);
+        AreaStyle(final FileConfiguration config, final String path) {
+            this.strokeColor = config.getString(path + ".strokeColor", "#6666CC");
+            this.strokeOpacity = config.getDouble(path + ".strokeOpacity", 0.8);
+            this.strokeWeight = config.getInt(path + ".strokeWeight", 8);
+            this.fillColor = config.getString(path + ".fillColor", "#FFFFFF");
+            this.fillOpacity = config.getDouble(path + ".fillOpacity", 0.01);
         }
+
     }
+
 }
