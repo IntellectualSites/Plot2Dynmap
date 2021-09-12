@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compileOnlyApi("com.plotsquared:PlotSquared-Core:6.1.0") {
+    compileOnlyApi("com.plotsquared:PlotSquared-Core:6.1.1") {
         exclude(group = "worldedit-core")
     }
     compileOnlyApi("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
