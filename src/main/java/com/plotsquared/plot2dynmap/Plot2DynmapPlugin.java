@@ -208,9 +208,9 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
                         if (denied_list.length > 0) {
                             denied = StringUtils.join(denied_list, ",");
                         }
-                        helpers = helpers.isEmpty() ? helpers : "None";
-                        trusted = trusted.isEmpty() ? trusted : "None";
-                        denied = denied.isEmpty() ? denied : "None";
+                        helpers = helpers.isEmpty() ? "None" : helpers;
+                        trusted = trusted.isEmpty() ? "None" : trusted;
+                        denied = denied.isEmpty() ? "None" : denied;
 
                         final String alias = plot.getAlias().isEmpty() ? "None" : plot.getAlias();
                         /*final Collection<Flag<?>> plotFlags =
