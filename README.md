@@ -1,8 +1,12 @@
-Plot2Dynmap
-===========
+<p align="center">
+    <img src="https://i.imgur.com/ljIOKSr.png" width="150">
+</p>
 
-Dynmap addon for PlotSquared 5.
+---
+
+Dynmap addon for PlotSquared v6. It provides additional markers for Dynmap.
 
 ## Links
-- Downloads: [link](https://ci.athion.net/job/Plot2Dynmap/)
-- Spigot: [link](https://www.spigotmc.org/resources/plot2dynmap.1292/)
+- [Download](https://www.spigotmc.org/resources/1292/)
+- [Discord](https://discord.gg/intellectualsites)
+- [Issues](https://github.com/IntellectualSites/Plot2Dynmap/issues)
