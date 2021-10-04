@@ -1,47 +1,46 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     java
     `java-library`
 
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.0"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    alias(libs.plugins.pluginyml)
+    alias(libs.plugins.shadow)
 }
 
 the<JavaPluginExtension>().toolchain {
     languageVersion.set(JavaLanguageVersion.of(16))
 }
 
+version = "6.0.2-SNAPSHOT"
+
 repositories {
     mavenCentral()
     maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
-    maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://repo.mikeprimm.com/") }
     maven { url = uri("https://maven.enginehub.org/repo/") }
     maven { url = uri("https://mvn.intellectualsites.com/content/groups/public/") }
 }
 
 dependencies {
-    compileOnlyApi("com.plotsquared:PlotSquared-Core:6.1.1") {
+    compileOnly(libs.plotsquared) {
         exclude(group = "worldedit-core")
     }
-    compileOnlyApi("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0-SNAPSHOT")
-    compileOnly("us.dynmap:dynmap-api:3.2-beta-1"){ isTransitive = false }
-    compileOnly("us.dynmap:DynmapCore:3.2-beta-1"){ isTransitive = false }
-    compileOnly("org.projectlombok:lombok:1.18.20")
-    annotationProcessor("org.projectlombok:lombok:1.18.20")
-    implementation("org.bstats:bstats-bukkit:2.2.1")
-    implementation("org.bstats:bstats-base:2.2.1")
+    compileOnly(libs.paper)
+    compileOnly(libs.worldedit)
+    compileOnly(libs.dynmapCore) { isTransitive = false }
+    compileOnly(libs.dynmapApi) { isTransitive = false }
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+    implementation(libs.bstatsBukkit)
+    implementation(libs.bstatsBase)
 }
 
 tasks.named<ShadowJar>("shadowJar") {
     archiveClassifier.set(null as String?)
     dependencies {
-        include(dependency("org.bstats:bstats-bukkit:2.2.1"))
-        include(dependency("org.bstats:bstats-base:2.2.1"))
-        relocate("org.bstats", "com.plotsquared.metrics")
+        relocate("org.bstats", "com.plotsquared.plot2dynmap.metrics")
     }
 }
 
