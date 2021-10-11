@@ -8,7 +8,7 @@ worldedit = "7.2.6"
 dynmap = "3.2-beta-1"
 
 # Annotations
-lombok = "1.18.20"
+lombok = "1.18.22"
 
 # Third party
 bstats = "2.2.1"
