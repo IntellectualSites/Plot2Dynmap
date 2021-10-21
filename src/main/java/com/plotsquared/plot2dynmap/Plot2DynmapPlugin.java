@@ -51,20 +51,20 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
 
     private String formatInfoWindow(final PlotWrapper plot) {
         String v = "<div class=\"plotinfo\">" + this.infoWindow + "</div>";
-        v = v.replace("%id%", plot.getPlotId().toCommaSeparatedString());
+        v = v.replace("%id%", plot.plotId().toCommaSeparatedString());
         v = v.replace(
                 "%alias%",
-                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getAlias())).replace("%key%", "Alias")
+                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.alias())).replace("%key%", "Alias")
         );
-        v = v.replace("%owner%", this.infoElement.replace("%values%", plot.getOwner()).replace("%key%", "Owner"));
-        v = v.replace("%trusted%", this.infoElement.replace("%values%", plot.getTrusted()).replace("%key%", "Trusted"));
-        v = v.replace("%members%", this.infoElement.replace("%values%", plot.getHelpers()).replace("%key%", "Members"));
-        v = v.replace("%denied%", this.infoElement.replace("%values%", plot.getDenied()).replace("%key%", "Denied"));
+        v = v.replace("%owner%", this.infoElement.replace("%values%", plot.owner()).replace("%key%", "Owner"));
+        v = v.replace("%trusted%", this.infoElement.replace("%values%", plot.trusted()).replace("%key%", "Trusted"));
+        v = v.replace("%members%", this.infoElement.replace("%values%", plot.helpers()).replace("%key%", "Members"));
+        v = v.replace("%denied%", this.infoElement.replace("%values%", plot.denied()).replace("%key%", "Denied"));
         v = v.replace(
                 "%flags%",
-                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.getFlags())).replace("%key%", "Flags")
+                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.flags())).replace("%key%", "Flags")
         );
-        v = v.replace("%owner%", plot.getOwner());
+        v = v.replace("%owner%", plot.owner());
         return v;
     }
 
@@ -85,7 +85,7 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
         }
         if (areaStyle == null) { /* Check for owner style matches */
             if (!this.ownerStyle.isEmpty()) {
-                String owner = plot.getOwner();
+                String owner = plot.owner();
                 if (owner == null) {
                     owner = "unknown";
                 }
@@ -116,14 +116,14 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
     }
 
     private void handlePlot(final World world, final PlotWrapper plotWrapper, final Map<String, AreaMarker> newMap) {
-        final String name = plotWrapper.getPlotId().toCommaSeparatedString();
+        final String name = plotWrapper.plotId().toCommaSeparatedString();
 
         double[] x;
         double[] z;
 
         int i = 0;
 
-        final Plot plotObject = plotWrapper.getArea().getPlot(plotWrapper.getPlotId());
+        final Plot plotObject = plotWrapper.area().getPlot(plotWrapper.plotId());
 
         if (plotObject == null) {
             return;

@@ -31,8 +31,6 @@ dependencies {
     compileOnly(libs.worldedit)
     compileOnly(libs.dynmapCore) { isTransitive = false }
     compileOnly(libs.dynmapApi) { isTransitive = false }
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
     implementation(libs.bstatsBukkit)
     implementation(libs.bstatsBase)
 }

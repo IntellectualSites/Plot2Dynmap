@@ -7,9 +7,6 @@ plotsquared = "6.1.2"
 worldedit = "7.2.6"
 dynmap = "3.2-beta-1"
 
-# Annotations
-lombok = "1.18.20"
-
 # Third party
 bstats = "2.2.1"
 
@@ -26,9 +23,6 @@ plotsquared = { group = "com.plotsquared", name = "PlotSquared-Core", version.re
 worldedit = { group = "com.sk89q.worldedit", name = "worldedit-bukkit", version.ref = "worldedit" }
 dynmapCore = { group = "us.dynmap", name = "DynmapCore", version.ref = "dynmap" }
 dynmapApi = { group = "us.dynmap", name = "dynmap-api", version.ref = "dynmap" }
-
-# Annotations
-lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 
 # Third party
 bstatsBase = { group = "org.bstats", name = "bstats-base", version.ref = "bstats" }
