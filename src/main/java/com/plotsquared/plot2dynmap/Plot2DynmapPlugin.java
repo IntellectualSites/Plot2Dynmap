@@ -1,6 +1,7 @@
 package com.plotsquared.plot2dynmap;
 
 import com.plotsquared.core.PlotSquared;
+import com.plotsquared.core.configuration.Settings;
 import com.plotsquared.core.plot.Plot;
 import com.plotsquared.core.plot.flag.PlotFlag;
 import com.plotsquared.core.plot.world.PlotAreaManager;
@@ -20,10 +21,14 @@ import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -34,8 +39,8 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
 
     private static final String DEF_INFO_ELEMENT = "%key% <span style=\"font-weight:bold;\">%values%</span><br>";
     private static final String DEF_INFO_WINDOW =
-            "<div class=\"infowindow\">" + "<span style=\"font-size:120%;\">%id%</span><br>" + "%alias%" + "%owner%"
-                    + "%members%" + "%trusted%" + "%denied%" + "%flags%" + "</div>";
+            "<div class=\"infowindow\">" + "<span style=\"font-size:120%;\">%id%</span><br>" + "%creationdate%" +
+                    "%alias%" + "%owner%" + "%members%" + "%trusted%" + "%rating%" + "%denied%" + "%flags%" + "</div>";
 
     private static MarkerSet markerSet;
     private long updatePeriod;
@@ -65,6 +70,8 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
                 this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.flags())).replace("%key%", "Flags")
         );
         v = v.replace("%owner%", plot.owner());
+        v = v.replace("%creationdate%", this.infoElement.replace("%values%", plot.creationDate()).replace("%key%","Creation Date"));
+        v = v.replace("%rating%", this.infoElement.replace("%values%", plot.rating()).replace("%key%", "Rating"));
         return v;
     }
 
@@ -231,8 +238,24 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
                         String flags = flagBuilder.toString();
                         flags = flags.isEmpty() ? "None" : flags;
 
+                        final long creationDate = Long.parseLong(String.valueOf(plot.getTimestamp()));
+                        SimpleDateFormat sdf = new SimpleDateFormat(Settings.Timeformat.DATE_FORMAT);
+                        sdf.setTimeZone(TimeZone.getTimeZone(Settings.Timeformat.TIME_ZONE));
+                        String newDate = sdf.format(creationDate);
+
+                        final String rating;
+                        if (Double.isNaN(plot.getAverageRating())) {
+                            rating = "NaN";
+                        } else if (!Settings.General.SCIENTIFIC) {
+                            BigDecimal roundRating = BigDecimal.valueOf(plot.getAverageRating()).setScale(2, RoundingMode.HALF_UP);
+                            rating = String.valueOf(roundRating);
+                        } else {
+                            rating = Double.toString(plot.getAverageRating());
+                        }
+
                         final PlotWrapper plotWrapper =
-                                new PlotWrapper(owner, helpers, trusted, denied, plot.getId(), alias, flags, plot.getArea());
+                                new PlotWrapper(owner, helpers, trusted, denied, plot.getId(), alias, flags, plot.getArea(),
+                                        newDate, rating);
                         handlePlot(world, plotWrapper, newMap);
                     }
                 }

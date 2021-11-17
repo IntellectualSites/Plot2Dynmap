@@ -5,7 +5,7 @@ import com.plotsquared.core.plot.PlotId;
 
 record PlotWrapper(String owner, String helpers, String trusted, String denied,
                    PlotId plotId, String alias, String flags,
-                   PlotArea area) {
+                   PlotArea area, String creationDate, String rating) {
 
     /**
      * @deprecated Scheduled for removal in favor of record accessors.
