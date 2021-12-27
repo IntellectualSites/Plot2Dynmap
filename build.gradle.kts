@@ -9,10 +9,23 @@ plugins {
 }
 
 the<JavaPluginExtension>().toolchain {
-    languageVersion.set(JavaLanguageVersion.of(16))
+    languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-version = "6.0.2-SNAPSHOT"
+configurations.all {
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
+}
+
+tasks.compileJava.configure {
+    options.release.set(16)
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+version = "6.0.2"
 
 repositories {
     mavenCentral()
