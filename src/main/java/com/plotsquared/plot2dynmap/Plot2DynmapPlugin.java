@@ -70,7 +70,10 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
                 this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.flags())).replace("%key%", "Flags")
         );
         v = v.replace("%owner%", plot.owner());
-        v = v.replace("%creationdate%", this.infoElement.replace("%values%", plot.creationDate()).replace("%key%","Creation Date"));
+        v = v.replace(
+                "%creationdate%",
+                this.infoElement.replace("%values%", plot.creationDate()).replace("%key%", "Creation Date")
+        );
         v = v.replace("%rating%", this.infoElement.replace("%values%", plot.rating()).replace("%key%", "Rating"));
         return v;
     }
@@ -111,12 +114,8 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
         } catch (final NumberFormatException e) {
             e.printStackTrace();
         }
-        if (areaStyle.strokeWeight != 0) {
-            areaMarker.setLineStyle(areaStyle.strokeWeight, areaStyle.strokeOpacity, strokeColor);
-        }
-        if (areaStyle.fillOpacity != 0) {
-            areaMarker.setFillStyle(areaStyle.fillOpacity, fillColor);
-        }
+        areaMarker.setLineStyle(areaStyle.strokeWeight, areaStyle.strokeOpacity, strokeColor);
+        areaMarker.setFillStyle(areaStyle.fillOpacity, fillColor);
         if (areaStyle.label != null) {
             areaMarker.setLabel(areaStyle.label);
         }
@@ -247,7 +246,10 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
                         if (Double.isNaN(plot.getAverageRating())) {
                             rating = "NaN";
                         } else if (!Settings.General.SCIENTIFIC) {
-                            BigDecimal roundRating = BigDecimal.valueOf(plot.getAverageRating()).setScale(2, RoundingMode.HALF_UP);
+                            BigDecimal roundRating = BigDecimal.valueOf(plot.getAverageRating()).setScale(
+                                    2,
+                                    RoundingMode.HALF_UP
+                            );
                             rating = String.valueOf(roundRating);
                         } else {
                             rating = Double.toString(plot.getAverageRating());
@@ -255,7 +257,8 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
 
                         final PlotWrapper plotWrapper =
                                 new PlotWrapper(owner, helpers, trusted, denied, plot.getId(), alias, flags, plot.getArea(),
-                                        newDate, rating);
+                                        newDate, rating
+                                );
                         handlePlot(world, plotWrapper, newMap);
                     }
                 }
