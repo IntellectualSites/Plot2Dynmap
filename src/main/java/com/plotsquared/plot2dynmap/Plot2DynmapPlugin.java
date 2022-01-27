@@ -108,14 +108,25 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
 
         int strokeColor = 0xFF0000;
         int fillColor = 0xFF0000;
+        double strokeOpacity = areaStyle.strokeOpacity;
+        double fillOpacity = areaStyle.fillOpacity;
         try {
             strokeColor = Integer.parseInt(areaStyle.strokeColor.substring(1), 16);
             fillColor = Integer.parseInt(areaStyle.fillColor.substring(1), 16);
         } catch (final NumberFormatException e) {
             e.printStackTrace();
         }
-        areaMarker.setLineStyle(areaStyle.strokeWeight, areaStyle.strokeOpacity, strokeColor);
-        areaMarker.setFillStyle(areaStyle.fillOpacity, fillColor);
+        // If 0-opacity or stroke weight, set the color to red with 0 percentage alpha channel to still be drawn and interactable
+        if (strokeOpacity == 0) {
+            strokeColor = 0xFF000000;
+            strokeOpacity = 1;
+        }
+        if (fillOpacity == 0) {
+            fillColor = 0xFF000000;
+            fillOpacity = 1;
+        }
+        areaMarker.setLineStyle(areaStyle.strokeWeight, strokeOpacity, strokeColor);
+        areaMarker.setFillStyle(fillOpacity, fillColor);
         if (areaStyle.label != null) {
             areaMarker.setLabel(areaStyle.label);
         }
