@@ -5,7 +5,7 @@ paper = "1.18.1-R0.1-SNAPSHOT"
 # Plugins
 plotsquared = "6.4.0"
 worldedit = "7.2.9"
-dynmap = "3.2-beta-1"
+dynmap = "3.3"
 
 # Third party
 bstats = "3.0.0"
@@ -21,7 +21,7 @@ paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" 
 # Plugins
 plotsquared = { group = "com.plotsquared", name = "PlotSquared-Core", version.ref = "plotsquared" }
 worldedit = { group = "com.sk89q.worldedit", name = "worldedit-bukkit", version.ref = "worldedit" }
-dynmapCore = { group = "us.dynmap", name = "DynmapCore", version.ref = "dynmap" }
+dynmapCore = { group = "us.dynmap", name = "DynmapCoreAPI", version.ref = "dynmap" }
 dynmapApi = { group = "us.dynmap", name = "dynmap-api", version.ref = "dynmap" }
 
 # Third party
