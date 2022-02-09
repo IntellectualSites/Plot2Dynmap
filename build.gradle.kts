@@ -25,7 +25,7 @@ java {
     withSourcesJar()
 }
 
-version = "6.0.3-SNAPSHOT"
+version = "6.0.4-SNAPSHOT"
 
 repositories {
     mavenCentral()
