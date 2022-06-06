@@ -1,9 +1,5 @@
 [versions]
-# Platform expectations
-paper = "1.18.2-R0.1-SNAPSHOT"
-
 # Plugins
-plotsquared = "6.8.1"
 worldedit = "7.2.10"
 dynmap = "3.3"
 
@@ -15,18 +11,10 @@ shadow = "7.1.2"
 bukkityml = "0.5.1"
 
 [libraries]
-# Platform expectations
-paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
-
 # Plugins
-plotsquared = { group = "com.plotsquared", name = "PlotSquared-Core", version.ref = "plotsquared" }
 worldedit = { group = "com.sk89q.worldedit", name = "worldedit-bukkit", version.ref = "worldedit" }
 dynmapCore = { group = "us.dynmap", name = "DynmapCoreAPI", version.ref = "dynmap" }
 dynmapApi = { group = "us.dynmap", name = "dynmap-api", version.ref = "dynmap" }
-
-# Third party
-bstatsBase = { group = "org.bstats", name = "bstats-base", version.ref = "bstats" }
-bstatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }

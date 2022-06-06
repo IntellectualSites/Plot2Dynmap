@@ -35,15 +35,16 @@ repositories {
 }
 
 dependencies {
-    compileOnly(libs.plotsquared) {
+    implementation(platform("com.intellectualsites.bom:bom-1.18.x:1.4"))
+    compileOnly("com.plotsquared:PlotSquared-Core") {
         exclude(group = "worldedit-core")
     }
-    compileOnly(libs.paper)
+    compileOnly("io.papermc.paper:paper-api")
     compileOnly(libs.worldedit)
     compileOnly(libs.dynmapCore) { isTransitive = false }
     compileOnly(libs.dynmapApi) { isTransitive = false }
-    implementation(libs.bstatsBukkit)
-    implementation(libs.bstatsBase)
+    implementation("org.bstats:bstats-bukkit")
+    implementation("org.bstats:bstats-base")
 }
 
 tasks.named<ShadowJar>("shadowJar") {
