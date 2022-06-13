@@ -35,7 +35,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("com.intellectualsites.bom:bom-1.18.x:1.4"))
+    implementation(platform("com.intellectualsites.bom:bom-1.18.x:1.5"))
     compileOnly("com.plotsquared:PlotSquared-Core") {
         exclude(group = "worldedit-core")
     }
