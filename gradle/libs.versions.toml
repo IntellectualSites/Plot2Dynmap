@@ -1,7 +1,7 @@
 [versions]
 # Plugins
 worldedit = "7.2.13"
-dynmap = "3.3"
+dynmap = "3.4"
 
 # Third party
 bstats = "3.0.0"
