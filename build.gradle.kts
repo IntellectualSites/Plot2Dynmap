@@ -29,7 +29,7 @@ version = "6.0.4-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
+    maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
     maven { url = uri("https://repo.mikeprimm.com/") }
     maven { url = uri("https://maven.enginehub.org/repo/") }
 }
