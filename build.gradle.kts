@@ -17,15 +17,10 @@ configurations.all {
 }
 
 tasks.compileJava.configure {
-    options.release.set(16)
+    options.release.set(17)
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-version = "6.0.4-SNAPSHOT"
+version = "7.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -35,8 +30,8 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("com.intellectualsites.bom:bom-1.18.x:1.27"))
-    compileOnly("com.plotsquared:PlotSquared-Core") {
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.32"))
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-core") {
         exclude(group = "worldedit-core")
     }
     compileOnly("io.papermc.paper:paper-api")
@@ -58,7 +53,7 @@ bukkit {
     name = "Plot2Dynmap"
     main = "com.plotsquared.plot2dynmap.Plot2DynmapPlugin"
     authors = listOf("Empire92", "NotMyFault", "dordsor21")
-    apiVersion = "1.13"
+    apiVersion = "1.20"
     description = "This plugin adds a marker around claimed PlotSquared plots in the dynmap interface"
     version = rootProject.version.toString()
     depend = listOf("PlotSquared", "dynmap")

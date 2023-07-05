@@ -7,9 +7,10 @@ import com.plotsquared.core.plot.flag.PlotFlag;
 import com.plotsquared.core.plot.world.PlotAreaManager;
 import com.plotsquared.core.util.query.PlotQuery;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -59,7 +60,7 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
         v = v.replace("%id%", plot.plotId().toCommaSeparatedString());
         v = v.replace(
                 "%alias%",
-                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.alias())).replace("%key%", "Alias")
+                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml4(plot.alias())).replace("%key%", "Alias")
         );
         v = v.replace("%owner%", this.infoElement.replace("%values%", plot.owner()).replace("%key%", "Owner"));
         v = v.replace("%trusted%", this.infoElement.replace("%values%", plot.trusted()).replace("%key%", "Trusted"));
@@ -67,7 +68,7 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
         v = v.replace("%denied%", this.infoElement.replace("%values%", plot.denied()).replace("%key%", "Denied"));
         v = v.replace(
                 "%flags%",
-                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml(plot.flags())).replace("%key%", "Flags")
+                this.infoElement.replace("%values%", StringEscapeUtils.escapeHtml4(plot.flags())).replace("%key%", "Flags")
         );
         v = v.replace("%owner%", plot.owner());
         v = v.replace(
@@ -291,6 +292,14 @@ public class Plot2DynmapPlugin extends JavaPlugin implements Listener, Runnable 
 
     @Override
     public void onEnable() {
+        // Just to be safe on our side. Prior versions should not load anyway...
+        if (!Bukkit.getPluginManager().getPlugin("PlotSquared").getDescription().getVersion().startsWith("7")) {
+            getLogger().severe("PlotSquared 7.x is required for Plot2Dynmap to work!");
+            getLogger().severe("Please update PlotSquared: https://www.spigotmc.org/resources/77506/");
+            getLogger().severe("Disabling Plot2Dynmap...");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
         final FileConfiguration config = getConfig();
         final PluginManager pluginManager = getServer().getPluginManager();
         DynmapAPI dynAPI = (DynmapAPI) pluginManager.getPlugin("dynmap");
