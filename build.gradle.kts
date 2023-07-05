@@ -20,7 +20,7 @@ tasks.compileJava.configure {
     options.release.set(17)
 }
 
-version = "7.0.0"
+version = "7.0.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
