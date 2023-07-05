@@ -20,11 +20,6 @@ tasks.compileJava.configure {
     options.release.set(17)
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
 version = "7.0.0-SNAPSHOT"
 
 repositories {
@@ -32,14 +27,11 @@ repositories {
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
     maven { url = uri("https://repo.mikeprimm.com/") }
     maven { url = uri("https://maven.enginehub.org/repo/") }
-    // TODO remove once this is part of BOM
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.29"))
-    // TODO remove version once this is part of BOM
-    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.0.0-SNAPSHOT") {
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.32"))
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-core") {
         exclude(group = "worldedit-core")
     }
     compileOnly("io.papermc.paper:paper-api")
