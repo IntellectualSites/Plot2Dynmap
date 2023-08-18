@@ -69,7 +69,7 @@ val supportedVersions = listOf("1.20", "1.20.1")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
-    projectId.set("plothider")
+    projectId.set("plot2dynmap")
     versionName.set("${project.version}")
     versionNumber.set("${project.version}")
     versionType.set("release")
