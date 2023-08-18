@@ -9,6 +9,7 @@ bstats = "3.0.0"
 # Gradle plugins
 shadow = "8.1.1"
 bukkityml = "0.6.0"
+minotaur = "2.8.3"
 
 [libraries]
 # Plugins
@@ -19,3 +20,4 @@ dynmapApi = { group = "us.dynmap", name = "dynmap-api", version.ref = "dynmap" }
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "bukkityml" }
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }

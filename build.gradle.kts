@@ -6,6 +6,7 @@ plugins {
 
     alias(libs.plugins.pluginyml)
     alias(libs.plugins.shadow)
+    alias(libs.plugins.minotaur)
 }
 
 the<JavaPluginExtension>().toolchain {
@@ -62,4 +63,23 @@ bukkit {
 
 tasks.named("build").configure {
     dependsOn("shadowJar")
+}
+
+val supportedVersions = listOf("1.20", "1.20.1")
+
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set("plothider")
+    versionName.set("${project.version}")
+    versionNumber.set("${project.version}")
+    versionType.set("release")
+    uploadFile.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
+    gameVersions.addAll(supportedVersions)
+    loaders.addAll(listOf("paper", "purpur", "spigot"))
+    syncBodyFrom.set(rootProject.file("README.md").readText())
+    changelog.set("The changelog is available on GitHub: https://github" +
+            ".com/IntellectualSites/Plot2Dynmap/releases/tag/${project.version}")
+    dependencies {
+        required.project("dynmap")
+    }
 }
