@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-worldedit = "7.2.15"
+worldedit = "7.2.16"
 dynmap = "3.6"
 
 # Third party
