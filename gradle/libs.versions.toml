@@ -7,7 +7,7 @@ dynmap = "3.6"
 bstats = "3.0.0"
 
 # Gradle plugins
-shadow = "8.1.1"
+shadow = "8.3.0"
 bukkityml = "0.6.0"
 minotaur = "2.8.7"
 
@@ -18,6 +18,6 @@ dynmapCore = { group = "us.dynmap", name = "DynmapCoreAPI", version.ref = "dynma
 dynmapApi = { group = "us.dynmap", name = "dynmap-api", version.ref = "dynmap" }
 
 [plugins]
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "bukkityml" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
