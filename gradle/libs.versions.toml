@@ -7,7 +7,7 @@ dynmap = "3.6"
 bstats = "3.0.0"
 
 # Gradle plugins
-shadow = "9.0.2"
+shadow = "9.1.0"
 bukkityml = "0.6.0"
 minotaur = "2.8.8"
 
