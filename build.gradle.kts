@@ -10,15 +10,15 @@ plugins {
 }
 
 the<JavaPluginExtension>().toolchain {
-    languageVersion.set(JavaLanguageVersion.of(17))
+    languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 configurations.all {
-    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
 }
 
 tasks.compileJava.configure {
-    options.release.set(17)
+    options.release.set(21)
 }
 
 version = "7.0.1-SNAPSHOT"
