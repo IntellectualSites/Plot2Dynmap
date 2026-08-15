@@ -45,9 +45,7 @@ dependencies {
 
 tasks.named<ShadowJar>("shadowJar") {
     archiveClassifier.set(null as String?)
-    dependencies {
-        relocate("org.bstats", "com.plotsquared.plot2dynmap.metrics")
-    }
+    relocate("org.bstats", "com.plotsquared.plot2dynmap.metrics")
 }
 
 bukkit {
